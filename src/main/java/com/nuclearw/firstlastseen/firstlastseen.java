@@ -41,10 +41,7 @@ public class firstlastseen extends JavaPlugin {
 	public Locale locale = Locale.getDefault();
 	public DateFormat dateformat = DateFormat.getDateInstance();
 	
-
-	private final firstlastseenPluginListener pluginListener = new firstlastseenPluginListener(this);
 	private final firstlastseenPlayerListener playerListener = new firstlastseenPlayerListener(this);
-	private final firstlastseenPermissionsHandler permissionsHandler = new firstlastseenPermissionsHandler(this);
 	
 	Logger log = Logger.getLogger("Minecraft");
 	
@@ -271,9 +268,6 @@ public class firstlastseen extends JavaPlugin {
 		pluginManager.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Monitor, this);
 		pluginManager.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Monitor, this);
 		pluginManager.registerEvent(Event.Type.PLAYER_KICK, playerListener, Event.Priority.Monitor, this);
-		pluginManager.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
-		
-		firstlastseenPermissionsHandler.initialize(getServer());
 		
 		log.info("[FirstLastSeen] version "+this.getDescription().getVersion()+" loaded.");
 		
@@ -284,10 +278,6 @@ public class firstlastseen extends JavaPlugin {
 				putFirstSeen(p, curTime);
 			}
 		}
-	}
-
-	public boolean hasPermission(Player player, String permission) {
-		return permissionsHandler.hasPermission(player, permission);
 	}
 	
 	public void updateFrom(int age) {
