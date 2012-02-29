@@ -349,7 +349,7 @@ public class firstlastseen extends JavaPlugin {
 			args[0] = args[0].toLowerCase();
 			
 			if(isPlayer(sender)) {
-				if(!hasPermission(((Player) sender), "firstlastseen.firstseen")) return true;
+				if(!((Player) sender).hasPermission("firstlastseen.firstseen")) return true;
 			}
 			
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
@@ -376,7 +376,7 @@ public class firstlastseen extends JavaPlugin {
 			args[0] = args[0].toLowerCase();
 			
 			if(isPlayer(sender)) {
-				if(!hasPermission(((Player) sender), "firstlastseen.lastseen")) return true;
+				if(!((Player) sender).hasPermission("firstlastseen.lastseen")) return true;
 			}
 			
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
@@ -402,7 +402,7 @@ public class firstlastseen extends JavaPlugin {
 			args[0] = args[0].toLowerCase();
 			
 			if(isPlayer(sender)) {
-				if(!hasPermission(((Player) sender), "firstlastseen.seen")) return true;
+				if(!((Player) sender).hasPermission("firstlastseen.seen")) return true;
 			}
 			
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
