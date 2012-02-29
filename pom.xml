@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nuclearw.firstlastseen</groupId>
     <artifactId>FirstLastSeen</artifactId>
-    <version>0.9</version>
+    <version>0.10</version>
     <name>FirstLastSeen</name>
     <url>https://github.com/NuclearW/FirstLastSeen</url>
     <issueManagement>
