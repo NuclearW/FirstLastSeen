@@ -18,8 +18,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -235,6 +233,7 @@ public class firstlastseen extends JavaPlugin {
 			if(vnum.equals("0.5")) updateFrom(2);
 			if(vnum.equals("0.6")) updateFrom(-1);
 			if(vnum.equals("0.7")) updateFrom(3);
+			if(!vnum.equals(this.getDescription().getVersion())) updateFrom(-1);
 		}
 		
 		//Sanity time on language
@@ -265,9 +264,7 @@ public class firstlastseen extends JavaPlugin {
 		
 		PluginManager pluginManager = getServer().getPluginManager();
 		
-		pluginManager.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Monitor, this);
-		pluginManager.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Monitor, this);
-		pluginManager.registerEvent(Event.Type.PLAYER_KICK, playerListener, Event.Priority.Monitor, this);
+		pluginManager.registerEvents(playerListener, this);
 		
 		log.info("[FirstLastSeen] version "+this.getDescription().getVersion()+" loaded.");
 		
