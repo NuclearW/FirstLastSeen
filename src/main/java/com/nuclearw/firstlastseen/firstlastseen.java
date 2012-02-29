@@ -22,29 +22,27 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class firstlastseen extends JavaPlugin {
-	
 	static String mainDirectory = "plugins" + File.separator + "FirstLastSeen";
 	static String dataDirectory = "plugins" + File.separator + "FirstLastSeen" + File.separator + "data";
 	static File config = new File(mainDirectory + File.separator + "config");
 	static File language = new File(mainDirectory + File.separator + "lang");
 	static File version = new File(mainDirectory + File.separator + "VERSION");
 	static Properties prop = new Properties();
-	
+
 	public String norecordfor;
 	public String norecord;
 	public String firstseen;
 	public String lastseen;
 	public String firstseennotify;
-	
+
 	public Locale locale = Locale.getDefault();
 	public DateFormat dateformat = DateFormat.getDateInstance();
-	
+
 	private final firstlastseenPlayerListener playerListener = new firstlastseenPlayerListener(this);
-	
+
 	Logger log = Logger.getLogger("Minecraft");
-	
+
 	public void onEnable() {
-		
 		//Make the file
 		new File(mainDirectory).mkdir();
 		new File(dataDirectory).mkdir();
@@ -60,7 +58,7 @@ public class firstlastseen extends JavaPlugin {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		if(!language.exists()) {
 			Properties langpropout = new Properties();
 			try {
@@ -78,7 +76,7 @@ public class firstlastseen extends JavaPlugin {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		FileInputStream in;
 		try {
 			in = new FileInputStream(config);
@@ -89,7 +87,7 @@ public class firstlastseen extends JavaPlugin {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		FileInputStream langin;
 		Properties langpropin = new Properties();
 		try {
@@ -101,30 +99,28 @@ public class firstlastseen extends JavaPlugin {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		//Attempt to load from towny
 		if (prop.getProperty("ImportTowny").equalsIgnoreCase("true")) {
-			
 			log.info("Attempting to import data from Towny");
-			
+
 			File towny = new File("plugins" + File.separator + "Towny" + File.separator + "data" + File.separator + "residents");
 			if(towny.exists()) {
 				String[] residents = towny.list();
 				for (int i = 0; i < residents.length; i++) {
-					
 					File residentin = new File("plugins" + File.separator + "Towny" + File.separator + "data" + File.separator + "residents" + File.separator + residents[i]);
-					
+
 					if(!residentin.isFile()) {
 						log.info(residentin.toString() + " not a file, skipping.");
 						continue;
 					}
 
 					String residentname = residents[i].substring(0, Integer.parseInt(Long.toString(residents[i].length()-4))).toLowerCase();
-					
+
 					FileInputStream townydatain;
-					
+
 					Properties townypropin = new Properties();
-					
+
 					try {
 						townydatain = new FileInputStream(residentin);
 						townypropin.load(townydatain);
@@ -134,14 +130,14 @@ public class firstlastseen extends JavaPlugin {
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
-					
+
 					if(!townypropin.containsKey("lastOnline") || !townypropin.containsKey("registered")) {
 						log.info(residentname + " not valid, skipping.");
 						continue;
 					}
-					
+
 					File residentout = new File(dataDirectory + File.separator + residentname);
-					
+
 					if(!residentout.exists()) {
 						try {
 							residentout.createNewFile();
@@ -149,9 +145,9 @@ public class firstlastseen extends JavaPlugin {
 							ex.printStackTrace();
 						}
 					}
-						
+
 					Properties newpropout = new Properties();
-					
+
 					try {							
 						FileOutputStream townydataout = new FileOutputStream(residentout);
 						newpropout.put("FirstSeen", townypropin.get("registered"));
@@ -159,19 +155,16 @@ public class firstlastseen extends JavaPlugin {
 						newpropout.store(townydataout, "");
 						townydataout.flush();
 						townydataout.close();
-						
+
 						log.info(residentname + " imported.");
-						
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
-					
 				}
-				
 			} else {
 				log.info("Towny data not found, aborting.");
 			}
-			
+
 			try {
 				FileOutputStream out = new FileOutputStream(config);
 				prop.put("ImportTowny", "false");
@@ -181,9 +174,8 @@ public class firstlastseen extends JavaPlugin {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
 		}
-		
+
 		/*
 		 * Versions prior to 0.4 did not have a version file, thus any install lacking it is either new, or an update.
 		 * 
@@ -201,9 +193,9 @@ public class firstlastseen extends JavaPlugin {
 			} catch (SecurityException ex) {
 				ex.printStackTrace();
 			}
-			
+
 			String[] dataEntries = new File(dataDirectory).list();
-			
+
 			for (int i = 0; i < dataEntries.length; i++) {
 				if(containsUpperCase(dataEntries[i])) {
 					File invalid = new File(dataDirectory + File.separator + dataEntries[i]);
@@ -212,7 +204,6 @@ public class firstlastseen extends JavaPlugin {
 					}
 				}
 			}
-			
 		} else {
 			byte[] buffer = new byte[(int) version.length()];
 			BufferedInputStream f = null;
@@ -226,7 +217,7 @@ public class firstlastseen extends JavaPlugin {
 			} finally {
 				if (f != null) try { f.close(); } catch (IOException ignored) { }
 			}
-			
+
 			String vnum = new String(buffer);
 			//In the future past versions can be checked for and dealt with here.
 			if(vnum.equals("0.4")) updateFrom(1);
@@ -235,7 +226,7 @@ public class firstlastseen extends JavaPlugin {
 			if(vnum.equals("0.7")) updateFrom(3);
 			if(!vnum.equals(this.getDescription().getVersion())) updateFrom(-1);
 		}
-		
+
 		//Sanity time on language
 		if(!langpropin.containsKey("norecordfor") || !langpropin.containsKey("norecord") || !langpropin.containsKey("firstseen") || !langpropin.containsKey("lastseen") || !langpropin.containsKey("firstseennotify")) {
 			log.info("FirstLastSeen lang file not complete!  Reverting file to english.");
@@ -261,13 +252,13 @@ public class firstlastseen extends JavaPlugin {
 		this.firstseen = this.colorizeText(langpropin.getProperty("firstseen"));
 		this.lastseen = this.colorizeText(langpropin.getProperty("lastseen"));
 		this.firstseennotify = this.colorizeText(langpropin.getProperty("firstseennotify"));
-		
+
 		PluginManager pluginManager = getServer().getPluginManager();
-		
+
 		pluginManager.registerEvents(playerListener, this);
-		
+
 		log.info("[FirstLastSeen] version "+this.getDescription().getVersion()+" loaded.");
-		
+
 		//Now we see if anyone is online who we need to add for the very first time.
 		long curTime = System.currentTimeMillis();
 		for(Player p : this.getServer().getOnlinePlayers()) {
@@ -276,7 +267,7 @@ public class firstlastseen extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	public void updateFrom(int age) {
 		//Just change version file
 		if(age == -1) {
@@ -290,7 +281,7 @@ public class firstlastseen extends JavaPlugin {
 		//Version 0.5 and later stuff
 		if(age <= 2) {
 			String[] updateStr = new String[5];
-			
+
 			prop.clear();
 			FileInputStream updatein;
 			try {
@@ -302,13 +293,13 @@ public class firstlastseen extends JavaPlugin {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-			
+
 			updateStr[0] = prop.getProperty("norecordfor");
 			updateStr[1] = prop.getProperty("norecord");
 			updateStr[2] = prop.getProperty("firstseen");
 			updateStr[3] = prop.getProperty("lastseen");
 			updateStr[4] = "Welcome <player> to the server!";
-			
+
 			prop.clear();
 			try {
 				language.createNewFile();
@@ -332,7 +323,7 @@ public class firstlastseen extends JavaPlugin {
 		}
 		updateVersion();
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("firstseen")) {
 			if(args.length != 1) return false;
@@ -344,11 +335,11 @@ public class firstlastseen extends JavaPlugin {
 				//Nope
 			}
 			args[0] = args[0].toLowerCase();
-			
+
 			if(isPlayer(sender)) {
 				if(!((Player) sender).hasPermission("firstlastseen.firstseen")) return true;
 			}
-			
+
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
 			if(!targetfile.exists()) {
 				//sender.sendMessage("No record for " + args[0] + " found.");
@@ -358,7 +349,7 @@ public class firstlastseen extends JavaPlugin {
 			sender.sendMessage(args[0]);
 			//sender.sendMessage("First seen on: " + getFirstSeen(args[0]));
 			sender.sendMessage(firstseen.replaceFirst("<date>", getFirstSeen(args[0])));
-			
+
 			return true;
 		}
 		if(cmd.getName().equalsIgnoreCase("lastseen")) {
@@ -371,11 +362,11 @@ public class firstlastseen extends JavaPlugin {
 				//Nope
 			}
 			args[0] = args[0].toLowerCase();
-			
+
 			if(isPlayer(sender)) {
 				if(!((Player) sender).hasPermission("firstlastseen.lastseen")) return true;
 			}
-			
+
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
 			if(!targetfile.exists()) {
 				//sender.sendMessage("No record for " + args[0] + " found.");
@@ -397,11 +388,11 @@ public class firstlastseen extends JavaPlugin {
 				//Nope
 			}
 			args[0] = args[0].toLowerCase();
-			
+
 			if(isPlayer(sender)) {
 				if(!((Player) sender).hasPermission("firstlastseen.seen")) return true;
 			}
-			
+
 			File targetfile = new File(dataDirectory + File.separator + args[0]);
 			if(!targetfile.exists()) {
 				//sender.sendMessage("No record for " + args[0] + " found.");
@@ -417,7 +408,7 @@ public class firstlastseen extends JavaPlugin {
 		}
 		return false;
 	}
-	
+
 	public void updateVersion() {
 		try {
 			version.createNewFile();
@@ -430,28 +421,27 @@ public class firstlastseen extends JavaPlugin {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public void onDisable() {
 		log.info("[FirstLastSeen] version "+this.getDescription().getVersion()+" unloaded.");
 	}
-	
+
 	public boolean isFirstJoin(Player player) {
 		if(new File(dataDirectory + File.separator + player.getName().toLowerCase()).exists()) return false;
 		return true;
 	}
-	
+
 	public void putFirstSeen(Player player, long time) {
 		storeTime(player, time, "FirstSeen");
 	}
-	
+
 	public void putLastSeen(Player player, long time) {
 		storeTime(player, time, "LastSeen");
-		
 	}
-	
+
 	public void storeTime(Player player, long time, String property) {
 		File savefile = new File(dataDirectory + File.separator +  player.getName().toLowerCase());
-		
+
 		if(!savefile.exists()) {
 			try {
 				savefile.createNewFile();
@@ -459,10 +449,10 @@ public class firstlastseen extends JavaPlugin {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		FileInputStream timedatain;
 		Properties timepropin = new Properties();
-		
+
 		try {
 			timedatain = new FileInputStream(savefile);
 			timepropin.load(timedatain);
@@ -474,7 +464,7 @@ public class firstlastseen extends JavaPlugin {
 		}
 
 		Properties timepropout = new Properties();
-		
+
 		try {
 			FileOutputStream outtime = new FileOutputStream(savefile);
 			if(timepropin.containsKey("FirstSeen")) timepropout.put("FirstSeen", timepropin.get("FirstSeen"));
@@ -489,7 +479,7 @@ public class firstlastseen extends JavaPlugin {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public String getFirstSeen(String name) {
 		FileInputStream getseenin;
 		File getseen = new File(dataDirectory + File.separator + name);
@@ -507,7 +497,7 @@ public class firstlastseen extends JavaPlugin {
 		Date date = new Date(Long.parseLong(getseenprop.getProperty("FirstSeen")));
 		return DateFormat.getDateTimeInstance().format(date);
 	}
-	
+
 	public String getLastSeen(String name) {
 		FileInputStream getseenin;
 		File getseen = new File(dataDirectory + File.separator + name);
@@ -525,7 +515,7 @@ public class firstlastseen extends JavaPlugin {
 		Date date = new Date(Long.parseLong(getseenprop.getProperty("LastSeen")));
 		return DateFormat.getDateTimeInstance().format(date);
 	}
-	
+
 	public static long getFirstSeenLong(String name) {
 		name = name.toLowerCase();
 		FileInputStream getseenin;
@@ -564,11 +554,11 @@ public class firstlastseen extends JavaPlugin {
 		if(!getseenprop.containsKey("LastSeen")) return -1;
 		return Long.parseLong(getseenprop.getProperty("LastSeen"));
 	}
-	
+
 	public boolean isPlayer(CommandSender sender) {
         return sender != null && sender instanceof Player;
     }
-	
+
 	private boolean containsUpperCase(String string) {
 		for (char c : string.toCharArray()) {
 		    if (Character.isUpperCase(c)) {
@@ -577,7 +567,7 @@ public class firstlastseen extends JavaPlugin {
 		}
 		return false;
 	}
-	
+
 	public String colorizeText(String string) {
     	string = string.replaceAll("&0", ChatColor.BLACK+"");
 		string = string.replaceAll("&1", ChatColor.DARK_BLUE+"");

@@ -11,11 +11,11 @@ import com.nuclearw.firstlastseen.firstlastseen;
 
 public class firstlastseenPlayerListener implements Listener {
 	public static firstlastseen plugin;
-	
+
 	public firstlastseenPlayerListener(firstlastseen instance) {
 		plugin = instance;
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		long time = System.currentTimeMillis();
@@ -37,5 +37,4 @@ public class firstlastseenPlayerListener implements Listener {
 		long time = System.currentTimeMillis();
 		plugin.putLastSeen(event.getPlayer(), time);
 	}
-	
 }
