@@ -1,0 +1,34 @@
+name: FirstLastSeen
+main: com.nuclearw.FirstLastSeen.firstlastseen
+version: ${project.version}
+author: NuclearW
+description: FirstLastSeen allows you to keep track of when a player first joined, and when they were last seen
+commands:
+   firstseen:
+      description: See the first join time for a player.
+      usage: |
+         /<command> [player]
+   lastseen:
+      description: See the last part time for a player.
+      usage: |
+         /<command> [player]
+   seen:
+      description: See the first join and last part time for a player.
+      usage: |
+         /<command> [player]
+permissions:
+    firstlastseen.*:
+        description: Gives access to all firstlastseen commands
+        children:
+            firstlastseen.firstseen: true
+            firstlastseen.lastseen: true
+            firstlastseen.seen: true
+    firstlastseen.firstseen:
+        description: Allows you to check a first seen time
+        default: op
+    firstlastseen.lastseen:
+        description: Allows you to check a last seen time
+        default: op
+    firstlastseen.seen:
+        description: Allows you to check a first and last seen time
+        default: op

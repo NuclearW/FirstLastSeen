@@ -1,0 +1,27 @@
+== FirstLastSeen
+
+FirstLastSeen allows you to keep track of when a player first joined, and when they were last seen
+
+=== Commands
+
+* /seen <user>
+** //See the first join and last part time for a player//
+* /firstseen <user>
+** //See the first join time for a player//
+* /lastseen <user>
+** //See the last part time for a player//
+
+=== Permissions
+
+* firstlastseen.seen
+** //Allows you to check a first and last seen time//
+* firstlastseen.firstseen
+** //Allows you to check a first seen time//
+* firstlastseen.lastseen
+** //Allows you to check a last seen time//
+
+All permissions default to **op**
+
+=== Compiling
+
+Maven 3 is required to compile FirstLastSeen
