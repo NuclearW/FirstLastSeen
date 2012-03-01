@@ -1,5 +1,5 @@
 name: FirstLastSeen
-main: com.nuclearw.FirstLastSeen.firstlastseen
+main: com.nuclearw.firstlastseen.FirstLastSeen
 version: ${project.version}
 author: NuclearW
 description: FirstLastSeen allows you to keep track of when a player first joined, and when they were last seen
