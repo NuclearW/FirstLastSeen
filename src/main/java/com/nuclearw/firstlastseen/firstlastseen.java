@@ -21,7 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class firstlastseen extends JavaPlugin {
+public class FirstLastSeen extends JavaPlugin {
 	static String mainDirectory = "plugins" + File.separator + "FirstLastSeen";
 	static String dataDirectory = "plugins" + File.separator + "FirstLastSeen" + File.separator + "data";
 	static File config = new File(mainDirectory + File.separator + "config");
@@ -38,7 +38,7 @@ public class firstlastseen extends JavaPlugin {
 	public Locale locale = Locale.getDefault();
 	public DateFormat dateformat = DateFormat.getDateInstance();
 
-	private final firstlastseenPlayerListener playerListener = new firstlastseenPlayerListener(this);
+	private final FirstLastSeenPlayerListener playerListener = new FirstLastSeenPlayerListener(this);
 
 	Logger log = Logger.getLogger("Minecraft");
 

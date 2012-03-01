@@ -7,12 +7,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.nuclearw.firstlastseen.firstlastseen;
+import com.nuclearw.firstlastseen.FirstLastSeen;
 
-public class firstlastseenPlayerListener implements Listener {
-	public static firstlastseen plugin;
+public class FirstLastSeenPlayerListener implements Listener {
+	public static FirstLastSeen plugin;
 
-	public firstlastseenPlayerListener(firstlastseen instance) {
+	public FirstLastSeenPlayerListener(FirstLastSeen instance) {
 		plugin = instance;
 	}
 
